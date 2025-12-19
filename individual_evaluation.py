@@ -110,8 +110,8 @@ RUN_SETTINGS = {
     "loss_function": "focal_loss",  # Options: "cross_entropy", "focal_loss"
     "focal_loss_alpha": 1,
     "focal_loss_gamma": 3.0,
-    "learning_rate": 0.0001,
-    "epochs": 100,
+    "learning_rate": 0.001,
+    "epochs": 25,
     "model": cnn.ECGCNN_MoE,
     "batch_size": 128,
     "layers_count": 5,
