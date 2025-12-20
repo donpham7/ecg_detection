@@ -96,7 +96,8 @@ class ECGTrainer:
             outputs, balance_loss = self.model(inputs)
         else:
             outputs = self.model(inputs)
-        loss = self.criterion(outputs, labels) + balance_loss
+        # loss = self.criterion(outputs, labels) + balance_loss
+        loss = self.criterion(outputs, labels) 
         loss.backward()
         self.optimizer.step()
         return loss.item()

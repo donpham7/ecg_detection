@@ -189,7 +189,7 @@ class ECGCNN_MoE(nn.Module):
         # Routing network
         self.router_pooling = nn.AdaptiveAvgPool1d(1)
         self.training = True
-        self.router_noise_std = 0.075
+        self.router_noise_std = 0.05
         self.router = nn.Linear(16, num_experts)
 
         self.conv2 = nn.Sequential(
@@ -201,7 +201,7 @@ class ECGCNN_MoE(nn.Module):
         final_length = (input_length // 8) // 2  # After expert blocks and conv2
         self.fc1 = nn.Linear(final_length * 1024, 256)
         self.fc2 = nn.Linear(256, num_classes)
-        self.dropout = nn.Dropout(p=0.1)
+        self.dropout = nn.Dropout(p=0.05)
 
     def forward(self, x):
         batch_size = x.size(0)
