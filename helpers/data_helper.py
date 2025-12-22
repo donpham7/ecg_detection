@@ -5,9 +5,10 @@ import numpy as np
 from imblearn.over_sampling import SMOTE, ADASYN
 import torch
 from helpers.data_augmentation import SimpleAugmentor
+from sklearn.model_selection import train_test_split
 
 
-def load_data(config: dict) -> tuple[pl.DataFrame, pl.DataFrame]:
+def load_data() -> tuple[pl.DataFrame, pl.DataFrame]:
     train_data = pl.read_csv("data/mitbih_train.csv", has_header=False)
     train_data = train_data.rename({"column_188": "label"})
 
@@ -60,14 +61,22 @@ def balance_data(data: pl.DataFrame, config: dict, seed: int) -> pl.DataFrame:
 
 def prepare_data(
     config: dict, balance: bool = True, seed: int = 42
-) -> tuple[pl.DataFrame, pl.DataFrame]:
+) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
     # Set all seeds for reproducibility
     set_all_seeds(seed)
 
-    train_data, test_data = load_data(config)
+    train_data, test_data = load_data()
+    train_data, validation_data = train_test_split(
+        train_data.to_pandas(),
+        test_size=0.2,
+        random_state=seed,
+        stratify=train_data["label"].to_numpy(),
+    )
+    train_data = pl.DataFrame(train_data)
+    validation_data = pl.DataFrame(validation_data)
     if balance:
         train_data = balance_data(train_data, config, seed=seed)
-    return train_data, test_data
+    return train_data, validation_data, test_data
 
 
 def set_all_seeds(seed: int):
