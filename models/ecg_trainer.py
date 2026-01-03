@@ -2,7 +2,14 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from models.ecg_cnn import ECGCNN, ECGCNN_MoE, ECGCNN_MoE_Large, ECGCNN_MoE_Small
+from models.ecg_cnn import (
+    ECGCNN,
+    ECGCNN_MoE,
+    ECGCNN_MoE_LSTM,
+    ECGCNN_MoE_Large,
+    ECGCNN_MoE_Small,
+    ECGCNN_MoE_Small_LSTM,
+)
 from torch.utils.data import DataLoader, TensorDataset
 import polars as pl
 from sklearn.metrics import (
@@ -48,7 +55,9 @@ class ECGTrainer:
         learning_rate=0.0005,
         criterion=nn.CrossEntropyLoss,
         batch_size=32,
+        torch_dtype=torch.float32,
         device=None,
+        early_stopping_patience=5,
     ):
         self.device = (
             device
@@ -56,13 +65,13 @@ class ECGTrainer:
             else torch.device("cuda" if torch.cuda.is_available() else "cpu")
         )
         print(f"Using device: {self.device}")
-        self.model = model
+        self.model = model.to(self.device)
         self.criterion = criterion.to(self.device)
         self.optimizer = optim.AdamW(self.model.parameters(), lr=learning_rate)
         self.train_data = DataLoader(
             TensorDataset(
                 torch.tensor(
-                    train_data.drop("label").to_numpy(), dtype=torch.float32
+                    train_data.drop("label").to_numpy(), dtype=torch_dtype
                 ).unsqueeze(1),
                 torch.tensor(train_data["label"].to_numpy(), dtype=torch.long),
             ),
@@ -73,7 +82,7 @@ class ECGTrainer:
         self.validation_data = DataLoader(
             TensorDataset(
                 torch.tensor(
-                    validation_data.drop("label").to_numpy(), dtype=torch.float32
+                    validation_data.drop("label").to_numpy(), dtype=torch_dtype
                 ).unsqueeze(1),
                 torch.tensor(validation_data["label"].to_numpy(), dtype=torch.long),
             ),
@@ -84,7 +93,7 @@ class ECGTrainer:
         self.test_data = DataLoader(
             TensorDataset(
                 torch.tensor(
-                    test_data.drop("label").to_numpy(), dtype=torch.float32
+                    test_data.drop("label").to_numpy(), dtype=torch_dtype
                 ).unsqueeze(1),
                 torch.tensor(test_data["label"].to_numpy(), dtype=torch.long),
             ),
@@ -92,10 +101,21 @@ class ECGTrainer:
             shuffle=True,
         )
 
+        self.early_stopping_patience = early_stopping_patience
+
     def train(self, num_epochs=10):
         self.model.train()
-        if type(self.model) in (ECGCNN_MoE, ECGCNN_MoE_Large, ECGCNN_MoE_Small):
+        if type(self.model) in (
+            ECGCNN_MoE,
+            ECGCNN_MoE_Large,
+            ECGCNN_MoE_Small,
+            ECGCNN_MoE_LSTM,
+            ECGCNN_MoE_Small_LSTM,
+        ):
             self.model.training = True  # Enable training-specific layers like dropout
+
+        early_stopping_counter = 0
+        best_val_loss = float("inf")
         for epoch in range(num_epochs):
             total_loss = 0
             for inputs, labels in self.train_data:
@@ -106,6 +126,15 @@ class ECGTrainer:
             print(
                 f"Epoch [{epoch+1}/{num_epochs}], Loss: {avg_loss:.4f}, Val Loss: {val_loss:.4f}, Val Accuracy: {val_accuracy:.4f}, Val F1: {val_f1:.4f}"
             )
+            # Early stopping check
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
+                early_stopping_counter = 0
+            else:
+                early_stopping_counter += 1
+                if early_stopping_counter >= self.early_stopping_patience:
+                    print(f"Early stopping triggered after {epoch+1} epochs.")
+                    break
 
     def train_step(self, inputs, labels):
         inputs = inputs.to(self.device)
@@ -113,19 +142,31 @@ class ECGTrainer:
         balance_loss = 0
         self.model.train()
         self.optimizer.zero_grad()
-        if type(self.model) in (ECGCNN_MoE, ECGCNN_MoE_Large, ECGCNN_MoE_Small):
+        if type(self.model) in (
+            ECGCNN_MoE,
+            ECGCNN_MoE_Large,
+            ECGCNN_MoE_Small,
+            ECGCNN_MoE_LSTM,
+            ECGCNN_MoE_Small_LSTM,
+        ):
             outputs, balance_loss = self.model(inputs)
         else:
             outputs = self.model(inputs)
-        # loss = self.criterion(outputs, labels) + balance_loss
-        loss = self.criterion(outputs, labels)
+        loss = self.criterion(outputs, labels) + balance_loss
+        # loss = self.criterion(outputs, labels)
         loss.backward()
         self.optimizer.step()
         return loss.item()
 
     def validate(self):
         self.model.eval()
-        if type(self.model) in (ECGCNN_MoE, ECGCNN_MoE_Large, ECGCNN_MoE_Small):
+        if type(self.model) in (
+            ECGCNN_MoE,
+            ECGCNN_MoE_Large,
+            ECGCNN_MoE_Small,
+            ECGCNN_MoE_LSTM,
+            ECGCNN_MoE_Small_LSTM,
+        ):
             self.model.training = False  # Disable training-specific layers like dropout
         total_loss = 0
         correct = 0
@@ -141,12 +182,14 @@ class ECGTrainer:
                     type(self.model) == ECGCNN_MoE
                     or type(self.model) == ECGCNN_MoE_Large
                     or type(self.model) == ECGCNN_MoE_Small
+                    or type(self.model) == ECGCNN_MoE_LSTM
+                    or type(self.model) == ECGCNN_MoE_Small_LSTM
                 ):
                     outputs, balance_loss = self.model(inputs)
                 else:
                     outputs = self.model(inputs)
 
-                loss = self.criterion(outputs, labels)  # + balance_loss
+                loss = self.criterion(outputs, labels) + balance_loss
                 total_loss += loss.item()
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)
@@ -162,7 +205,13 @@ class ECGTrainer:
 
     def evaluate(self):
         self.model.eval()
-        if type(self.model) in (ECGCNN_MoE, ECGCNN_MoE_Large, ECGCNN_MoE_Small):
+        if type(self.model) in (
+            ECGCNN_MoE,
+            ECGCNN_MoE_Large,
+            ECGCNN_MoE_Small,
+            ECGCNN_MoE_LSTM,
+            ECGCNN_MoE_Small_LSTM,
+        ):
             self.model.training = False  # Disable training-specific layers like dropout
         total_loss = 0
         correct = 0
@@ -180,6 +229,8 @@ class ECGTrainer:
                     type(self.model) == ECGCNN_MoE
                     or type(self.model) == ECGCNN_MoE_Large
                     or type(self.model) == ECGCNN_MoE_Small
+                    or type(self.model) == ECGCNN_MoE_LSTM
+                    or type(self.model) == ECGCNN_MoE_Small_LSTM
                 ):
                     outputs, balance_loss = self.model(inputs)
                 else:
@@ -188,7 +239,7 @@ class ECGTrainer:
                 probs = torch.softmax(outputs, dim=1)
                 all_probs.extend(probs.cpu().numpy())
 
-                loss = self.criterion(outputs, labels)  # + balance_loss
+                loss = self.criterion(outputs, labels) + balance_loss
                 total_loss += loss.item()
                 _, predicted = torch.max(outputs.data, 1)
                 total += labels.size(0)

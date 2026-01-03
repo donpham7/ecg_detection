@@ -25,9 +25,9 @@ SEEDS = [1, 7, 21, 41, 89]
 
 # Configuration for binary classification
 BINARY_SETTINGS = {
-    "base_model": cnn.ECGCNN,  # Which model to load
+    "base_model": cnn.ECGCNN_MoE,  # Which model to load
     "layers_count": 5,
-    "base_model_path": "model_ECGCNN_final.pt",  # Path to saved weights
+    "base_model_path": "model_ECGCNN_MoE_final.pt",  # Path to saved weights
     "learning_rate": 0.0001,  # Lower LR for fine-tuning
     "epochs": 10,  # Fewer epochs for fine-tuning
     "batch_size": 128,

@@ -1,0 +1,352 @@
+[
+  {
+    "seed": 1,
+    "metrics": {
+      "avg_loss": 0.013256855280244138,
+      "accuracy": 0.9865704366892015,
+      "confusion_matrix": [
+        [
+          17990,
+          128
+        ],
+        [
+          166,
+          3608
+        ]
+      ],
+      "f1_macro": 0.976373609148949,
+      "precision_macro": 0.9782978874970338,
+      "recall_macro": 0.9744750204643844,
+      "specificity_macro": 0.9744750204643844,
+      "f1_per_class": [
+        0.9918950212273253,
+        0.9608521970705726
+      ],
+      "precision_per_class": [
+        0.990857016964089,
+        0.9657387580299786
+      ],
+      "recall_per_class": [
+        0.9929352025609891,
+        0.9560148383677796
+      ],
+      "roc_auc_ovr": null,
+      "roc_auc_ovo": null
+    },
+    "training_time": 204.07653903961182,
+    "evaluation_time": 0.8789701461791992,
+    "single_inference_time": 0.0009160518646240234,
+    "config": {
+      "loss_function": "focal_loss",
+      "focal_loss_alpha": 1,
+      "focal_loss_gamma": 2.5,
+      "learning_rate": 0.0001,
+      "epochs": 100,
+      "model": "ECGCNN_MoE",
+      "class_count": 2,
+      "batch_size": 128,
+      "layers_count": 5,
+      "augmentation_technique": "rgan",
+      "sampling_strategy": {
+        "0": 60000,
+        "1": 25000,
+        "2": 18000,
+        "3": 12000,
+        "4": 16000
+      },
+      "sampling_config": {
+        "jitter": true,
+        "jitter_rate": 0.8,
+        "jitter_sigma": 0.1,
+        "scale": true,
+        "scale_rate": 0.7,
+        "scale_low": 0.7,
+        "scale_high": 1.3,
+        "shift": true,
+        "shift_rate": 0.7,
+        "shift_max": 10
+      },
+      "seed": 1
+    }
+  },
+  {
+    "seed": 7,
+    "metrics": {
+      "avg_loss": 0.013496683763616263,
+      "accuracy": 0.9874383336378586,
+      "confusion_matrix": [
+        [
+          18019,
+          99
+        ],
+        [
+          176,
+          3598
+        ]
+      ],
+      "f1_macro": 0.9778089798771867,
+      "precision_macro": 0.9817742719433469,
+      "recall_macro": 0.9739504752832415,
+      "specificity_macro": 0.9739504752832415,
+      "f1_per_class": [
+        0.9924269545341888,
+        0.9631910052201847
+      ],
+      "precision_per_class": [
+        0.9903270129156362,
+        0.9732215309710576
+      ],
+      "recall_per_class": [
+        0.994535820730765,
+        0.9533651298357181
+      ],
+      "roc_auc_ovr": null,
+      "roc_auc_ovo": null
+    },
+    "training_time": 190.59546995162964,
+    "evaluation_time": 0.8139808177947998,
+    "single_inference_time": 0.0009511947631835937,
+    "config": {
+      "loss_function": "focal_loss",
+      "focal_loss_alpha": 1,
+      "focal_loss_gamma": 2.5,
+      "learning_rate": 0.0001,
+      "epochs": 100,
+      "model": "ECGCNN_MoE",
+      "class_count": 2,
+      "batch_size": 128,
+      "layers_count": 5,
+      "augmentation_technique": "rgan",
+      "sampling_strategy": {
+        "0": 60000,
+        "1": 25000,
+        "2": 18000,
+        "3": 12000,
+        "4": 16000
+      },
+      "sampling_config": {
+        "jitter": true,
+        "jitter_rate": 0.8,
+        "jitter_sigma": 0.1,
+        "scale": true,
+        "scale_rate": 0.7,
+        "scale_low": 0.7,
+        "scale_high": 1.3,
+        "shift": true,
+        "shift_rate": 0.7,
+        "shift_max": 10
+      },
+      "seed": 7
+    }
+  },
+  {
+    "seed": 21,
+    "metrics": {
+      "avg_loss": 0.01420679368996833,
+      "accuracy": 0.9879408002923442,
+      "confusion_matrix": [
+        [
+          18014,
+          104
+        ],
+        [
+          160,
+          3614
+        ]
+      ],
+      "f1_macro": 0.9787440414049207,
+      "precision_macro": 0.981612093200076,
+      "recall_macro": 0.97593225778391,
+      "specificity_macro": 0.97593225778391,
+      "f1_per_class": [
+        0.9927256695690511,
+        0.9647624132407902
+      ],
+      "precision_per_class": [
+        0.9911962143721801,
+        0.972027972027972
+      ],
+      "recall_per_class": [
+        0.9942598520808036,
+        0.9576046634870164
+      ],
+      "roc_auc_ovr": null,
+      "roc_auc_ovo": null
+    },
+    "training_time": 230.35985922813416,
+    "evaluation_time": 0.8541479110717773,
+    "single_inference_time": 0.0009296655654907227,
+    "config": {
+      "loss_function": "focal_loss",
+      "focal_loss_alpha": 1,
+      "focal_loss_gamma": 2.5,
+      "learning_rate": 0.0001,
+      "epochs": 100,
+      "model": "ECGCNN_MoE",
+      "class_count": 2,
+      "batch_size": 128,
+      "layers_count": 5,
+      "augmentation_technique": "rgan",
+      "sampling_strategy": {
+        "0": 60000,
+        "1": 25000,
+        "2": 18000,
+        "3": 12000,
+        "4": 16000
+      },
+      "sampling_config": {
+        "jitter": true,
+        "jitter_rate": 0.8,
+        "jitter_sigma": 0.1,
+        "scale": true,
+        "scale_rate": 0.7,
+        "scale_low": 0.7,
+        "scale_high": 1.3,
+        "shift": true,
+        "shift_rate": 0.7,
+        "shift_max": 10
+      },
+      "seed": 21
+    }
+  },
+  {
+    "seed": 41,
+    "metrics": {
+      "avg_loss": 0.013861699985618755,
+      "accuracy": 0.9877580851452585,
+      "confusion_matrix": [
+        [
+          18041,
+          77
+        ],
+        [
+          191,
+          3583
+        ]
+      ],
+      "f1_macro": 0.9782883283948726,
+      "precision_macro": 0.9842428313156235,
+      "recall_macro": 0.9725703249141104,
+      "specificity_macro": 0.9725703249141104,
+      "f1_per_class": [
+        0.992627235213205,
+        0.9639494215765402
+      ],
+      "precision_per_class": [
+        0.9895239139973673,
+        0.9789617486338797
+      ],
+      "recall_per_class": [
+        0.995750082790595,
+        0.9493905670376258
+      ],
+      "roc_auc_ovr": null,
+      "roc_auc_ovo": null
+    },
+    "training_time": 188.77145767211914,
+    "evaluation_time": 0.8425905704498291,
+    "single_inference_time": 0.0009488582611083985,
+    "config": {
+      "loss_function": "focal_loss",
+      "focal_loss_alpha": 1,
+      "focal_loss_gamma": 2.5,
+      "learning_rate": 0.0001,
+      "epochs": 100,
+      "model": "ECGCNN_MoE",
+      "class_count": 2,
+      "batch_size": 128,
+      "layers_count": 5,
+      "augmentation_technique": "rgan",
+      "sampling_strategy": {
+        "0": 60000,
+        "1": 25000,
+        "2": 18000,
+        "3": 12000,
+        "4": 16000
+      },
+      "sampling_config": {
+        "jitter": true,
+        "jitter_rate": 0.8,
+        "jitter_sigma": 0.1,
+        "scale": true,
+        "scale_rate": 0.7,
+        "scale_low": 0.7,
+        "scale_high": 1.3,
+        "shift": true,
+        "shift_rate": 0.7,
+        "shift_max": 10
+      },
+      "seed": 41
+    }
+  },
+  {
+    "seed": 89,
+    "metrics": {
+      "avg_loss": 0.012452029840751281,
+      "accuracy": 0.9871642609172301,
+      "confusion_matrix": [
+        [
+          18010,
+          108
+        ],
+        [
+          173,
+          3601
+        ]
+      ],
+      "f1_macro": 0.9773536911851579,
+      "precision_macro": 0.9806836288453329,
+      "recall_macro": 0.9740995597780855,
+      "specificity_macro": 0.9740995597780855,
+      "f1_per_class": [
+        0.9922591664141484,
+        0.9624482159561674
+      ],
+      "precision_per_class": [
+        0.9904856184348018,
+        0.9708816392558641
+      ],
+      "recall_per_class": [
+        0.9940390771608345,
+        0.9541600423953365
+      ],
+      "roc_auc_ovr": null,
+      "roc_auc_ovo": null
+    },
+    "training_time": 186.65969824790955,
+    "evaluation_time": 0.7765374183654785,
+    "single_inference_time": 0.00094451904296875,
+    "config": {
+      "loss_function": "focal_loss",
+      "focal_loss_alpha": 1,
+      "focal_loss_gamma": 2.5,
+      "learning_rate": 0.0001,
+      "epochs": 100,
+      "model": "ECGCNN_MoE",
+      "class_count": 2,
+      "batch_size": 128,
+      "layers_count": 5,
+      "augmentation_technique": "rgan",
+      "sampling_strategy": {
+        "0": 60000,
+        "1": 25000,
+        "2": 18000,
+        "3": 12000,
+        "4": 16000
+      },
+      "sampling_config": {
+        "jitter": true,
+        "jitter_rate": 0.8,
+        "jitter_sigma": 0.1,
+        "scale": true,
+        "scale_rate": 0.7,
+        "scale_low": 0.7,
+        "scale_high": 1.3,
+        "shift": true,
+        "shift_rate": 0.7,
+        "shift_max": 10
+      },
+      "seed": 89
+    }
+  }
+]
